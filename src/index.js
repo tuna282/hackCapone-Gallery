@@ -3,12 +3,9 @@ import './styles/main.scss'
 const submitButton = document.getElementById("search-button");
 const input = document.getElementById("search");
 let page = 1;
-const key = 'sntlYzNOgnb_utk2xCDj-dsqX0BpDi4Tb5cOy2CuXbY'
 
 submitButton.addEventListener("click", (e) => {
   e.preventDefault();
-  console.log(input.value)
-  console.log('hello')
   fetch(`https://api.unsplash.com/search/photos?page=${page}&query=${input.value}&orientation=squarish`, {
     method: 'GET',
     headers: {
@@ -17,15 +14,12 @@ submitButton.addEventListener("click", (e) => {
   })
     .then(res => res.json())
     .then(data => {
-      console.log(data.total_pages)
       renderPage(data)
     })
     .catch((err) => {
       console.error(err.message)
     })
 });
-
-
 
 const renderPage = (data) => {
   const figure = document.getElementById("img-container");
@@ -38,13 +32,17 @@ const renderPage = (data) => {
   if(page === 1) {
     pagination.innerHTML = `<button onclick="renderPrevPage()" class="button--prev">Previous</button>
     <button onclick="renderNextPage()" class="button--next">Next</button>`
-    const button = document.querySelector('.button--prev');
-    button.style.display = "none";
+    const prevButton = document.querySelector('.button--prev');
+    prevButton.style.display = "none";
+    if(data.total_pages === 1) {
+      const nextButton = document.querySelector('.button--next');
+      nextButton.style.display = "none";
+    }
   } else if (page === data.total_pages) {
     pagination.innerHTML = `<button onclick="renderPrevPage()" class="button--prev">Previous</button>
     <button onclick="renderNextPage()" class="button--next">Next</button>`
-    const button = document.querySelector('.button--next');
-    button.style.display = "none";
+    const nextButton = document.querySelector('.button--next');
+    nextButton.style.display = "none";
   } else {
     pagination.innerHTML = `<button onclick="renderPrevPage()" class="button--prev">Previous</button>
     <button onclick="renderNextPage()" class="button--next">Next</button>`
@@ -79,7 +77,5 @@ const renderPrevPage = () => {
     });
 };
 
-// window.run = run;
-// window.getCustomer = getCustomer;
 window.renderNextPage = renderNextPage;
 window.renderPrevPage = renderPrevPage;
