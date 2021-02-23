@@ -1,79 +1,80 @@
-import './styles/main.scss'
+import './styles/main.scss';
 
-const submitButton = document.getElementById("search-button");
-const input = document.getElementById("search");
+const submitButton = document.getElementById('search-button');
+const input = document.getElementById('search');
 let page = 1;
 
-submitButton.addEventListener("click", (e) => {
+const createButtons = () => {
+  const pagination = document.querySelector('.pagination');
+  pagination.innerHTML = `<button onclick="renderPrevPage()" class="button--prev">Previous</button>
+  <button onclick="renderNextPage()" class="button--next">Next</button>`;
+};
+
+const renderPage = data => {
+  const figure = document.getElementById('img-container');
+  figure.innerHTML = '';
+  data.results.forEach(image => {
+    figure.innerHTML += `<img src="${image.urls.small}" alt="${image.description}">`;
+  });
+
+  if (data.total_pages === 1) {
+    return true;
+  } if (page === 1) {
+    createButtons();
+    const prevButton = document.querySelector('.button--prev');
+    prevButton.style.display = 'none';
+  } else if (page === data.total_pages) {
+    createButtons();
+    const nextButton = document.querySelector('.button--next');
+    nextButton.style.display = 'none';
+  } else {
+    createButtons();
+  }
+  return true;
+};
+
+submitButton.addEventListener('click', e => {
   e.preventDefault();
   fetch(`https://api.unsplash.com/search/photos?page=${page}&query=${input.value}&orientation=squarish`, {
     method: 'GET',
     headers: {
-      "Authorization": "Client-ID sntlYzNOgnb_utk2xCDj-dsqX0BpDi4Tb5cOy2CuXbY"
-    }
+      Authorization: 'Client-ID sntlYzNOgnb_utk2xCDj-dsqX0BpDi4Tb5cOy2CuXbY',
+    },
   })
     .then(res => res.json())
     .then(data => {
-      renderPage(data)
+      renderPage(data);
     })
-    .catch((err) => {
-      console.error(err.message)
-    })
+    .catch(err => {
+      console.error(err.message);
+    });
 });
 
-const renderPage = (data) => {
-  const figure = document.getElementById("img-container");
-  figure.innerHTML = ''
-  data.results.forEach(image => {
-    figure.innerHTML += `<img src="${image.urls.small}" alt="${image.description}">`
-  });
-
-  const pagination = document.querySelector('.pagination');
-  if(page === 1) {
-    pagination.innerHTML = `<button onclick="renderPrevPage()" class="button--prev">Previous</button>
-    <button onclick="renderNextPage()" class="button--next">Next</button>`
-    const prevButton = document.querySelector('.button--prev');
-    prevButton.style.display = "none";
-    if(data.total_pages === 1) {
-      const nextButton = document.querySelector('.button--next');
-      nextButton.style.display = "none";
-    }
-  } else if (page === data.total_pages) {
-    pagination.innerHTML = `<button onclick="renderPrevPage()" class="button--prev">Previous</button>
-    <button onclick="renderNextPage()" class="button--next">Next</button>`
-    const nextButton = document.querySelector('.button--next');
-    nextButton.style.display = "none";
-  } else {
-    pagination.innerHTML = `<button onclick="renderPrevPage()" class="button--prev">Previous</button>
-    <button onclick="renderNextPage()" class="button--next">Next</button>`
-  }
-};
-
 const renderNextPage = () => {
-  page += 1
-  fetch(`https://api.unsplash.com/search/photos?page=${page}&query=${input.value}&orientation=squarish`,  {
+  page += 1;
+  fetch(`https://api.unsplash.com/search/photos?page=${page}&query=${input.value}&orientation=squarish`, {
     method: 'GET',
     headers: {
-      "Authorization": "Client-ID sntlYzNOgnb_utk2xCDj-dsqX0BpDi4Tb5cOy2CuXbY"
-    }
+      Authorization: 'Client-ID sntlYzNOgnb_utk2xCDj-dsqX0BpDi4Tb5cOy2CuXbY',
+    },
   })
     .then(res => res.json())
     .then(newData => {
-      renderPage(newData)
-    })
+      renderPage(newData);
+    });
 };
 
 const renderPrevPage = () => {
-  page -= 1
-  fetch(`https://api.unsplash.com/search/photos?page=${page}&query=${input.value}&orientation=squarish`,  {
+  page -= 1;
+  fetch(`https://api.unsplash.com/search/photos?page=${page}&query=${input.value}&orientation=squarish`, {
     method: 'GET',
     headers: {
-      "Authorization": "Client-ID sntlYzNOgnb_utk2xCDj-dsqX0BpDi4Tb5cOy2CuXbY"
-    }
+      Authorization: 'Client-ID sntlYzNOgnb_utk2xCDj-dsqX0BpDi4Tb5cOy2CuXbY',
+    },
   })
     .then(res => res.json())
     .then(newData => {
-      renderPage(newData)
+      renderPage(newData);
     });
 };
 
