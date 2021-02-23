@@ -14,7 +14,21 @@ const renderPage = data => {
   const figure = document.getElementById('img-container');
   figure.innerHTML = '';
   data.results.forEach(image => {
-    figure.innerHTML += `<img src="${image.urls.small}" alt="${image.description}">`;
+    if (!image.description) {
+      image.description = 'No description'
+    }
+    figure.innerHTML += `
+      <div class="img-box">
+        <div class="img-box--inner">
+          <div class="card-front">
+            <img class="images" src="${image.urls.small}" alt="${image.description}">
+          </div>
+          <div class="card-back">
+            <p class="img-description">${image.description}</p>
+            <p class="img-user">Uploaded by: ${image.user.name}</p>
+          </div>
+        </div>
+      </div>`;
   });
 
   if (data.total_pages === 1) {
@@ -35,7 +49,7 @@ const renderPage = data => {
 
 submitButton.addEventListener('click', e => {
   e.preventDefault();
-  fetch(`https://api.unsplash.com/search/photos?page=${page}&query=${input.value}&orientation=squarish`, {
+  fetch(`https://api.unsplash.com/search/photos?page=${page}&query=${input.value}`, {
     method: 'GET',
     headers: {
       Authorization: 'Client-ID sntlYzNOgnb_utk2xCDj-dsqX0BpDi4Tb5cOy2CuXbY',
@@ -52,7 +66,7 @@ submitButton.addEventListener('click', e => {
 
 const renderNextPage = () => {
   page += 1;
-  fetch(`https://api.unsplash.com/search/photos?page=${page}&query=${input.value}&orientation=squarish`, {
+  fetch(`https://api.unsplash.com/search/photos?page=${page}&query=${input.value}`, {
     method: 'GET',
     headers: {
       Authorization: 'Client-ID sntlYzNOgnb_utk2xCDj-dsqX0BpDi4Tb5cOy2CuXbY',
@@ -66,7 +80,7 @@ const renderNextPage = () => {
 
 const renderPrevPage = () => {
   page -= 1;
-  fetch(`https://api.unsplash.com/search/photos?page=${page}&query=${input.value}&orientation=squarish`, {
+  fetch(`https://api.unsplash.com/search/photos?page=${page}&query=${input.value}`, {
     method: 'GET',
     headers: {
       Authorization: 'Client-ID sntlYzNOgnb_utk2xCDj-dsqX0BpDi4Tb5cOy2CuXbY',
