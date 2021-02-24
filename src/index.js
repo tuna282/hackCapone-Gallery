@@ -2,6 +2,11 @@ import './styles/main.scss';
 
 const submitButton = document.getElementById('search-button');
 const input = document.getElementById('search');
+const dropdownContent = document.querySelector('.dropdown-content');
+const figure = document.getElementById('img-container');
+const form = document.getElementById('form')
+const dropdownContainer = document.querySelector('.dropdown')
+const searches = JSON.parse(localStorage.getItem('searchHistory'));
 let page = 1;
 
 const createButtons = () => {
@@ -10,8 +15,26 @@ const createButtons = () => {
   <button onclick="renderNextPage()" class="button--next">Next</button>`;
 };
 
+input.addEventListener('focus', (event) => {
+  dropdownContent.classList.add('toggle-dropdown')
+  const storedSearches = JSON.parse(localStorage.searchHistory)
+  console.log(storedSearches)
+  dropdownContent.innerHTML = `<p>${storedSearches[0]}</p><p>${storedSearches[1]}</p><p>${storedSearches[2]}</p>`
+})
+
+dropdownContent.addEventListener('click', (e) => {
+  const newSearch = e.target.textContent
+  input.value = newSearch;
+  dropdownContent.classList.remove('toggle-dropdown')
+})
+
+input.addEventListener('blur', () => {
+  dropdownContent.classList.remove('toggle-dropdown')
+}, true)
+
+
 const renderPage = data => {
-  const figure = document.getElementById('img-container');
+
   figure.innerHTML = '';
   data.results.forEach(image => {
     if (!image.description) {
@@ -31,9 +54,9 @@ const renderPage = data => {
       </div>`;
   });
 
-  if (data.total_pages === 1) {
+    if (data.total_pages === 1 || !input.value) {
     return true;
-  } if (page === 1) {
+  } else if (page === 1) {
     createButtons();
     const prevButton = document.querySelector('.button--prev');
     prevButton.style.display = 'none';
@@ -49,6 +72,10 @@ const renderPage = data => {
 
 submitButton.addEventListener('click', e => {
   e.preventDefault();
+  if (!localStorage.getItem('searchHistory')) {localStorage.searchHistory = JSON.stringify([])}
+  if (input.value) {searches.unshift(input.value)}
+  localStorage.setItem('searchHistory', JSON.stringify(searches))
+ 
   fetch(`https://api.unsplash.com/search/photos?page=${page}&query=${input.value}`, {
     method: 'GET',
     headers: {

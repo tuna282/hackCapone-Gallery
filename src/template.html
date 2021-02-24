@@ -13,8 +13,11 @@
     <header class="search-header">
       <form id="form">
         <label for="search"></label>
-        <input class="search-bar" type="text" id="search" placeholder="Search">
-        <button class="search-button" id="search-button">Search</button>
+        <div class="dropdown">
+          <input autocomplete="off" class="search-bar" type="text" id="search" placeholder="Search">
+          <div class="dropdown-content"></div>
+          <button class="search-button" id="search-button">Search</button>
+        </div>
       </form>
     </header>
     <section>
