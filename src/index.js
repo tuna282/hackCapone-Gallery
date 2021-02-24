@@ -15,7 +15,7 @@ const renderPage = data => {
   figure.innerHTML = '';
   data.results.forEach(image => {
     if (!image.description) {
-      image.description = 'No description'
+      image.description = 'No description';
     }
     figure.innerHTML += `
       <div class="img-box">
