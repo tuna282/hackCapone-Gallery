@@ -1,7 +1,7 @@
 import './styles/main.scss';
 
 const submitButton = document.getElementById('search-button');
-const input = document.getElementById('search');
+const input = document.getElementById('search-bar');
 const dropdownContent = document.querySelector('.dropdown-content');
 const figure = document.getElementById('img-container');
 const form = document.getElementById('form')
@@ -28,9 +28,18 @@ dropdownContent.addEventListener('click', (e) => {
   dropdownContent.classList.remove('toggle-dropdown')
 })
 
-input.addEventListener('blur', () => {
+document.body.addEventListener('click', event => {
+  if (event.target.id === 'search-bar') {
+    return;
+  }
+  if (event.target.className === 'dropdown-content') {
+    const newSearch = e.target.textContent
+    input.value = newSearch;
+    dropdownContent.classList.remove('toggle-dropdown')
+    return;
+  }
   dropdownContent.classList.remove('toggle-dropdown')
-}, true)
+});
 
 
 const renderPage = data => {
