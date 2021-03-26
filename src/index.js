@@ -18,7 +18,7 @@ const createButtons = () => {
 input.addEventListener('focus', (event) => {
   dropdownContent.classList.add('toggle-dropdown')
   const storedSearches = JSON.parse(localStorage.searchHistory)
-  console.log(storedSearches)
+  console.log(storedSearches);
   dropdownContent.innerHTML = `<p>${storedSearches[0]}</p><p>${storedSearches[1]}</p><p>${storedSearches[2]}</p>`
 })
 
